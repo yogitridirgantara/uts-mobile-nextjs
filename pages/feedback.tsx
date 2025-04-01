@@ -4,13 +4,21 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import StarRating from "../components/starRating";
 
-export default function Feedback(props: any) {
+interface Ulasan {
+	id: number;
+	nama: string;
+	rating: number;
+	komentar: string;
+	createdAt: string;
+}
+
+export default function Feedback() {
 	const [nama, setNama] = useState("");
-	const [rating, setRating] = useState(5);
+	const [rating, setRating] = useState<number>(5);
 	const [komentar, setKomentar] = useState("");
-	const [ulasan, setUlasan] = useState([]);
-	const [averageRating, setAverageRating] = useState(0);
-	const [totalVotes, setTotalVotes] = useState(0);
+	const [ulasan, setUlasan] = useState<Ulasan[]>([]);
+	const [averageRating, setAverageRating] = useState<number>(0);
+	const [totalVotes, setTotalVotes] = useState<number>(0);
 
 	useEffect(() => {
 		AOS.init({ duration: 1000, once: false, mirror: true });
@@ -19,14 +27,11 @@ export default function Feedback(props: any) {
 
 	const getUlasan = async () => {
 		const res = await fetch("/api/ulasan");
-		const data = await res.json();
+		const data: Ulasan[] = await res.json();
 		setUlasan(data);
 
 		if (data.length > 0) {
-			const total = data.reduce(
-				(acc: number, item: any) => acc + item.rating,
-				0
-			);
+			const total = data.reduce((acc, item) => acc + item.rating, 0);
 			setAverageRating(parseFloat((total / data.length).toFixed(1)));
 			setTotalVotes(data.length);
 		} else {
@@ -41,11 +46,7 @@ export default function Feedback(props: any) {
 		await fetch("/api/ulasan", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
-				nama,
-				rating: parseInt(rating.toString()),
-				komentar,
-			}),
+			body: JSON.stringify({ nama, rating, komentar }),
 		});
 
 		setNama("");
@@ -134,7 +135,7 @@ export default function Feedback(props: any) {
 					Ulasan Terbaru:
 				</h3>
 				{ulasan.length > 0 ? (
-					ulasan.map((item: any) => (
+					ulasan.map((item) => (
 						<div
 							key={item.id}
 							className="bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 p-4 rounded-lg shadow"

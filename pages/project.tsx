@@ -4,7 +4,7 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Image from "next/image";
 
-export default function Project(props: any) {
+export default function Project() {
 	useEffect(() => {
 		AOS.init({
 			duration: 1000,
@@ -82,7 +82,7 @@ export default function Project(props: any) {
 							className="rounded-lg w-full h-auto object-cover"
 							loading="lazy"
 							placeholder="blur"
-							blurDataURL="/blur-placeholder.png" 
+							blurDataURL="/blur-placeholder.png"
 						/>
 						<div className="flex flex-col justify-center items-center text-center mt-2">
 							<p className="text-white font-sans font-medium text-[12px] md:text-[16px]">
